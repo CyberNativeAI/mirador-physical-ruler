@@ -82,10 +82,23 @@ canvas の `service` プロパティに以下を追加します:
 ### Calculating physicalScale / physicalScale の計算方法
 
 ```
-physicalScale = physical width (mm) / canvas width (px)
+physicalScale = physical size of the object (mm) / the object's span on the canvas (px)
 ```
 
-If scan resolution (dpi) is known / スキャン解像度がわかっている場合:
+Measure the object on the canvas, not the whole canvas. A scan often includes background, a ruler or a colour bar around the object, and then the canvas size does not represent the object ([Physical Dimensions service](https://iiif.io/api/annex/services/#physical-dimensions)). Dividing by the whole canvas makes every reading too short.
+
+キャンバス全体ではなく、キャンバス上の資料そのものの長さ（px）で割ります。スキャン画像には資料の周りの余白・物差し・カラーチャートが含まれることが多く、キャンバス全体で割ると、ルーラーの読みがすべて短くなります。
+
+Example: the Hyakki Yagyo demo. The paper is 28 cm high and spans about 2,802 px of the 3,082 px canvas.
+
+例（百鬼夜行図のデモ）: 本紙の縦 28cm は、高さ 3,082px のキャンバスのうち約 2,802px にあたります。
+
+| Divide 280 mm by / 割る値 | physicalScale | Canvas length / キャンバスの横の長さ |
+|---|---|---|
+| Paper span / 本紙の高さ 2,802 px | 0.0999 mm/px | 7.94 m |
+| Whole canvas / キャンバス全体 3,082 px | 0.0909 mm/px | 7.22 m (9% short / 9% 短い) |
+
+If scan resolution (dpi) is known and the canvas has the image's pixel size / スキャン解像度がわかっていて、キャンバスと画像のピクセル寸法が同じ場合:
 
 ```
 physicalScale = 25.4 / dpi
